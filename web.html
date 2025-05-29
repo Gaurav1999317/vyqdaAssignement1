@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Editable Monthly Table</title>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  <style>
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      min-width: 100px;
+    }
+    td input {
+      width: 100%;
+      border: none;
+      background: transparent;
+      outline: none;
+    }
+    th {
+      background: #f0f0f0;
+    }
+    h2 {
+      font-family: sans-serif;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="root"></div>
+
+  <script type="text/babel">
+
+    const { useState } = React;
+
+    const tasks = [
+      "Onboarding Call",
+      "Google Search Console Access",
+      "Google Analytics Access",
+      "Website Access",
+      "Technical Audit",
+      "Anchor Text and Semantic Analysis",
+      "Competitor Analysis",
+      "Anchor Text / URL Mapping",
+      "Google Data Studio Report + Local Reporting Suite",
+      "Site Level Optimization",
+      "On Page Optimization",
+      "Content Creation",
+      "Content Publishing",
+      "Premium Press Release",
+      "Authority Niche Placements",
+      "Review Management",
+      "Index Links",
+      "Video Recap"
+    ];
+
+    // Generate empty editable columns 
+    const initialTableData = tasks.map(task => ({
+      task,
+      col1: "",
+      col2: "",
+      col3: "",
+      col4: ""
+    }));
+
+    function EditableMonthlyTable() {
+      const [data, setData] = useState(initialTableData);
+
+      const handleChange = (index, field,value) => {
+        const updated = [...data];
+        updated[index][field] = value;
+        setData(updated);
+      };
+
+      const handleSave = () => {
+        const payload = JSON.stringify({ tableData: data });
+        console.log("POST this to API:", payload);
+ 
+      };
+
+      return (
+        <div>
+          <h2>MONTH 1 Plan</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Column 1</th>
+                <th>Column 2</th>
+                <th>Column 3</th>
+                <th>Column 4</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.map((row, index) => (
+                <tr key={index}>
+                  <td>{row.task}</td>
+                  <td><input value={row.col1} onChange={(e) => handleChange(index, "col1", e.target.value)} /></td>
+                  <td><input value={row.col2} onChange={(e) => handleChange(index, "col2", e.target.value)} /></td>
+                  <td><input value={row.col3} onChange={(e) => handleChange(index, "col3", e.target.value)} /></td>
+                  <td><input value={row.col4} onChange={(e) => handleChange(index, "col4", e.target.value)} /></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <button onClick={handleSave}>Save (POST to API)</button>
+        </div>
+      );
+    }
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<EditableMonthlyTable />);
+
+  </script>
+
+</body>
+</html>
